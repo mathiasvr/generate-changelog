@@ -14,7 +14,10 @@ return Bluebird.all([
   File.readIfExists(CLI.file)
 ])
 .spread(function (newLogs, oldLogs) {
-  return File.writeToFile(CLI.file, newLogs + oldLogs);
+  var header = oldLogs.slice(0, oldLogs.indexOf('##')) || '# Changelog\n\n\n';
+  oldLogs = oldLogs.slice(oldLogs.indexOf('##'));
+
+  return File.writeToFile(CLI.file, header + newLogs + oldLogs);
 })
 .catch(function (err) {
   console.error(err);
